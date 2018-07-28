@@ -6,9 +6,6 @@ import android.view.View
 import cn.lsmya.restaurant.base.BaseFragment
 import cn.lsmya.restaurant.R
 import cn.lsmya.restaurant.adapter.TabLayoutAdapter
-import cn.lsmya.restaurant.takeOut.TakeOutDoingFragment
-import cn.lsmya.restaurant.takeOut.TakeOutDoneFragment
-import cn.lsmya.restaurant.takeOut.TakeOutToDoFragment
 import kotlinx.android.synthetic.main.fragment_take_out_eat.*
 
 class EatFragment : BaseFragment() {
