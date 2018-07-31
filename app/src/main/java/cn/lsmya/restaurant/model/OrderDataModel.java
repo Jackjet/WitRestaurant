@@ -1,6 +1,8 @@
 package cn.lsmya.restaurant.model;
 
-public class ListDataModel {
+import java.util.ArrayList;
+
+public class OrderDataModel {
     private String id;
     private String store_id;
     private String branch_id;
@@ -11,9 +13,9 @@ public class ListDataModel {
     private String order_type;
     private String order_buy_num;
     private AddressModel order_address_log;
-    private String order_subsidy_log;
+    private SubsidyLogModel order_subsidy_log;
     private String order_score_pay_log;
-    private String order_goods_log;
+    private ArrayList<GoodsModel> order_goods_log;
     private String order_goods_total;
     private String order_ship_price;
     private String order_subsidy_total;
@@ -36,11 +38,13 @@ public class ListDataModel {
     private String seat_number;
     private String seat_desk;
     private String eating_num;
+    private CapitalpoolModel Capitalpool;
+    private boolean OrderGoods;
 
-    public ListDataModel() {
+    public OrderDataModel() {
     }
 
-    public ListDataModel(String id, String store_id, String branch_id, String order_no, String uid, String nickname, String branch_name, String order_type, String order_buy_num, AddressModel order_address_log, String order_subsidy_log, String order_score_pay_log, String order_goods_log, String order_goods_total, String order_ship_price, String order_subsidy_total, String order_price, String order_total, String order_success_time, String order_close_info, String order_exhort, String order_ship_reply, String order_ship_time, String order_ship_waiter_log, String is_ping, String remark, String status, String create_time, String order_refund_status, String order_refund_way, String fail_info, String transaction_no, String seat_number, String seat_desk, String eating_num) {
+    public OrderDataModel(String id, String store_id, String branch_id, String order_no, String uid, String nickname, String branch_name, String order_type, String order_buy_num, AddressModel order_address_log, SubsidyLogModel order_subsidy_log, String order_score_pay_log, ArrayList<GoodsModel> order_goods_log, String order_goods_total, String order_ship_price, String order_subsidy_total, String order_price, String order_total, String order_success_time, String order_close_info, String order_exhort, String order_ship_reply, String order_ship_time, String order_ship_waiter_log, String is_ping, String remark, String status, String create_time, String order_refund_status, String order_refund_way, String fail_info, String transaction_no, String seat_number, String seat_desk, String eating_num, CapitalpoolModel capitalpool, boolean orderGoods) {
         this.id = id;
         this.store_id = store_id;
         this.branch_id = branch_id;
@@ -76,6 +80,8 @@ public class ListDataModel {
         this.seat_number = seat_number;
         this.seat_desk = seat_desk;
         this.eating_num = eating_num;
+        this.Capitalpool = capitalpool;
+        this.OrderGoods = orderGoods;
     }
 
     public String getId() {
@@ -158,11 +164,11 @@ public class ListDataModel {
         this.order_address_log = order_address_log;
     }
 
-    public String getOrder_subsidy_log() {
+    public SubsidyLogModel getOrder_subsidy_log() {
         return order_subsidy_log;
     }
 
-    public void setOrder_subsidy_log(String order_subsidy_log) {
+    public void setOrder_subsidy_log(SubsidyLogModel order_subsidy_log) {
         this.order_subsidy_log = order_subsidy_log;
     }
 
@@ -174,11 +180,11 @@ public class ListDataModel {
         this.order_score_pay_log = order_score_pay_log;
     }
 
-    public String getOrder_goods_log() {
+    public ArrayList<GoodsModel> getOrder_goods_log() {
         return order_goods_log;
     }
 
-    public void setOrder_goods_log(String order_goods_log) {
+    public void setOrder_goods_log(ArrayList<GoodsModel> order_goods_log) {
         this.order_goods_log = order_goods_log;
     }
 
@@ -358,9 +364,25 @@ public class ListDataModel {
         this.eating_num = eating_num;
     }
 
+    public CapitalpoolModel getCapitalpool() {
+        return Capitalpool;
+    }
+
+    public void setCapitalpool(CapitalpoolModel capitalpool) {
+        Capitalpool = capitalpool;
+    }
+
+    public boolean isOrderGoods() {
+        return OrderGoods;
+    }
+
+    public void setOrderGoods(boolean orderGoods) {
+        OrderGoods = orderGoods;
+    }
+
     @Override
     public String toString() {
-        return "ListDataModel{" +
+        return "OrderDataModel{" +
                 "id='" + id + '\'' +
                 ", store_id='" + store_id + '\'' +
                 ", branch_id='" + branch_id + '\'' +
@@ -370,10 +392,10 @@ public class ListDataModel {
                 ", branch_name='" + branch_name + '\'' +
                 ", order_type='" + order_type + '\'' +
                 ", order_buy_num='" + order_buy_num + '\'' +
-                ", order_address_log='" + order_address_log + '\'' +
+                ", order_address_log=" + order_address_log +
                 ", order_subsidy_log='" + order_subsidy_log + '\'' +
                 ", order_score_pay_log='" + order_score_pay_log + '\'' +
-                ", order_goods_log='" + order_goods_log + '\'' +
+                ", order_goods_log=" + order_goods_log +
                 ", order_goods_total='" + order_goods_total + '\'' +
                 ", order_ship_price='" + order_ship_price + '\'' +
                 ", order_subsidy_total='" + order_subsidy_total + '\'' +
@@ -396,7 +418,8 @@ public class ListDataModel {
                 ", seat_number='" + seat_number + '\'' +
                 ", seat_desk='" + seat_desk + '\'' +
                 ", eating_num='" + eating_num + '\'' +
+                ", Capitalpool=" + Capitalpool +
+                ", OrderGoods=" + OrderGoods +
                 '}';
     }
-
 }

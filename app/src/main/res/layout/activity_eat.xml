@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".orderData.EatActivity">
+
+    <cn.lsmya.library.PullLayout.PullLayout
+        android:id="@+id/eat_pullLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <cn.lsmya.library.PullLayout.PullScrollView
+            android:id="@+id/eat_scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/background2"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_45"
+                    android:background="@color/background2"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/dp_15"
+                    android:paddingRight="@dimen/dp_15"
+                    android:text="订单详情"
+                    android:textColor="@color/orderTab"
+                    android:textSize="@dimen/sp_15" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/dp_15">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_45"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="订单号"
+                            android:textColor="@color/textColor2"
+                            android:textSize="@dimen/sp_16" />
+
+                        <TextView
+                            android:id="@+id/eat_orderNumber"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:paddingRight="@dimen/dp_15"
+                            android:singleLine="true"
+                            android:ellipsize="middle"
+                            android:text=""
+                            android:textColor="@color/textColor2"
+                            android:textSize="@dimen/sp_16" />
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_1"
+                        android:background="@color/viewColor" />
+                    <cn.lsmya.restaurant.view.ListViewNoSlide
+                        android:id="@+id/eat_orderFoods"
+                        android:layout_width="match_parent"
+                        android:divider="@null"
+                        android:layout_height="wrap_content">
+
+                    </cn.lsmya.restaurant.view.ListViewNoSlide>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_45"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="商品金额"
+                            android:textColor="@color/textColor2"
+                            android:textSize="@dimen/sp_16" />
+
+                        <TextView
+                            android:id="@+id/eat_orderMoney"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:paddingRight="@dimen/dp_15"
+                            android:text=""
+                            android:textColor="@color/textColor2"
+                            android:textSize="@dimen/sp_16" />
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_1"
+                        android:background="@color/viewColor" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_45"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="优惠金额"
+                            android:textColor="@color/textColor2"
+                            android:textSize="@dimen/sp_16" />
+
+                        <TextView
+                            android:id="@+id/eat_orderOnSale"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:paddingRight="@dimen/dp_15"
+                            android:text=""
+                            android:textColor="@color/textColor2"
+                            android:textSize="@dimen/sp_16" />
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_1"
+                        android:background="@color/viewColor" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_45"
+                        android:gravity="center_vertical|right">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="实付款："
+                            android:textColor="@color/textColor2"
+                            android:textSize="@dimen/sp_16" />
+
+                        <TextView
+                            android:id="@+id/eat_orderPayMoney"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:paddingRight="@dimen/dp_15"
+                            android:text=""
+                            android:textColor="@color/red"
+                            android:textSize="@dimen/sp_16" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_1"
+                    android:background="@color/viewColor" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_45"
+                    android:background="@color/background2"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/dp_15"
+                    android:paddingRight="@dimen/dp_15"
+                    android:text="桌位信息"
+                    android:textColor="@color/orderTab"
+                    android:textSize="@dimen/sp_15" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_1"
+                    android:background="@color/viewColor" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_45"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/dp_15">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="桌号："
+                        android:textColor="@color/textColor2"
+                        android:textSize="@dimen/sp_16" />
+
+                    <TextView
+                        android:id="@+id/eat_orderAddressNum"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingRight="@dimen/dp_15"
+                        android:text=""
+                        android:textColor="@color/textColor2"
+                        android:textSize="@dimen/sp_16" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_1"
+                    android:background="@color/viewColor" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_45"
+                    android:background="@color/background2"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/dp_15"
+                    android:paddingRight="@dimen/dp_15"
+                    android:text="支付信息"
+                    android:textColor="@color/orderTab"
+                    android:textSize="@dimen/sp_15" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_1"
+                    android:background="@color/viewColor" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_45"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/dp_15">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="订单时间："
+                        android:textColor="@color/textColor2"
+                        android:textSize="@dimen/sp_16" />
+
+                    <TextView
+                        android:id="@+id/eat_orderPayData"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingRight="@dimen/dp_15"
+                        android:singleLine="true"
+                        android:ellipsize="middle"
+                        android:text=""
+                        android:textColor="@color/textColor2"
+                        android:textSize="@dimen/sp_16" />
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_1"
+                    android:background="@color/viewColor" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_20"
+                    android:background="@color/background2" />
+            </LinearLayout>
+        </cn.lsmya.library.PullLayout.PullScrollView>
+    </cn.lsmya.library.PullLayout.PullLayout>
+</RelativeLayout>

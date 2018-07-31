@@ -51,7 +51,6 @@ public class MessageActivity extends BaseTitleActivity implements ApiClientRespo
         setTitle("消息中心");
         list = new ArrayList<>();
         apiClientRequest = new ApiClientRequest(this, ROUTE.MESSAGE_LIST, apiHandler);
-        apiClientRequest.setDebug(true);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);

@@ -2,16 +2,16 @@ package cn.lsmya.restaurant.setting
 
 import android.content.Intent
 import android.view.View
-import cn.lsmya.restaurant.base.BaseFragment
+import cn.lsmya.library.base.BaseFragment
 import cn.lsmya.restaurant.R
 import cn.lsmya.restaurant.app.App
 import cn.lsmya.restaurant.main.LoginActivity
 import kotlinx.android.synthetic.main.fragment_setting.*
 
 class SettingFragment : BaseFragment(), View.OnClickListener {
-
-    override val layoutId: Int
-        get() = R.layout.fragment_setting
+    override fun getLayoutId(): Int {
+        return R.layout.fragment_setting
+    }
 
     override fun onViewCreated(view: View) {
         settingOrder.setOnClickListener(this)

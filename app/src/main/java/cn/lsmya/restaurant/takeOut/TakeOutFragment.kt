@@ -3,21 +3,22 @@ package cn.lsmya.restaurant.takeOut
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.view.View
-import cn.lsmya.restaurant.base.BaseFragment
+import cn.lsmya.library.base.BaseFragment
 import cn.lsmya.restaurant.R
 import cn.lsmya.restaurant.adapter.TabLayoutAdapter
 import kotlinx.android.synthetic.main.fragment_take_out_eat.*
 
 class TakeOutFragment : BaseFragment() {
+    override fun getLayoutId(): Int {
+        return R.layout.fragment_take_out_eat
+    }
+
     private lateinit var fragmentList: ArrayList<Fragment>
     private lateinit var titleList: ArrayList<String>
 
     private lateinit var toDoFragment: TakeOutToDoFragment
     private lateinit var doingFragment: TakeOutDoingFragment
     private lateinit var doneFragment: TakeOutDoneFragment
-
-    override val layoutId: Int
-        get() = R.layout.fragment_take_out_eat
 
     override fun onViewCreated(view: View) {
         takeOutEatTitle.text = "外卖"

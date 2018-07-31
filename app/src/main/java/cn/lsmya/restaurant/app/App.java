@@ -19,7 +19,7 @@ public class App extends Application {
         sp.edit().putBoolean("isLogin", isLogin).apply();
     }
 
-    private static boolean isLogin() {
+    public static boolean isLogin() {
         return sp.getBoolean("isLogin", false);
     }
 
@@ -28,7 +28,7 @@ public class App extends Application {
     }
 
     public static String getStoreId(){
-        return sp.getString("store_id","2");
+        return sp.getString("store_id","");
     }
 
     public static Context getContext() {

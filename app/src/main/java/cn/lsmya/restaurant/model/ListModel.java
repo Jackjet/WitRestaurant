@@ -4,14 +4,14 @@ import java.util.ArrayList;
 
 public class ListModel {
     private int status;
-    private ArrayList<ListDataModel> data;
+    private ArrayList<OrderDataModel> data;
     private MapModel map;
     private String info;
 
     public ListModel() {
     }
 
-    public ListModel(int status, ArrayList<ListDataModel> data, MapModel map, String info) {
+    public ListModel(int status, ArrayList<OrderDataModel> data, MapModel map, String info) {
         this.status = status;
         this.data = data;
         this.map = map;
@@ -26,11 +26,11 @@ public class ListModel {
         this.status = status;
     }
 
-    public ArrayList<ListDataModel> getData() {
+    public ArrayList<OrderDataModel> getData() {
         return data;
     }
 
-    public void setData(ArrayList<ListDataModel> data) {
+    public void setData(ArrayList<OrderDataModel> data) {
         this.data = data;
     }
 
