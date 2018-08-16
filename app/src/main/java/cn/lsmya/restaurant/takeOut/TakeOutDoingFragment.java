@@ -19,7 +19,7 @@ import cn.lsmya.library.PullLayout.PullRecyclerView;
 import cn.lsmya.library.base.BaseFragment;
 import cn.lsmya.library.base.BaseRecyclerViewAdapter;
 import cn.lsmya.restaurant.R;
-import cn.lsmya.restaurant.adapter.TakeOutListAdapter;
+import cn.lsmya.restaurant.adapter.TakeOutDoingAdapter;
 import cn.lsmya.restaurant.app.App;
 import cn.lsmya.restaurant.app.ROUTE;
 import cn.lsmya.restaurant.model.ChangeOrderTypeModel;
@@ -37,7 +37,7 @@ public class TakeOutDoingFragment extends BaseFragment implements BaseRecyclerVi
     @BindView(R.id.fragmentList_null)
     ImageView nullData;
 
-    private TakeOutListAdapter adapter;
+    private TakeOutDoingAdapter adapter;
     private List<OrderDataModel> list;
     private ApiHandler apiHandler = new ApiHandler(this);
     private ApiClientRequest apiClientRequest;
@@ -57,7 +57,7 @@ public class TakeOutDoingFragment extends BaseFragment implements BaseRecyclerVi
         apiClientRequest_change = new ApiClientRequest(getActivity(), ROUTE.CHANGE_ORDER, apiHandler);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new TakeOutListAdapter(getActivity(), list, this);
+        adapter = new TakeOutDoingAdapter(getActivity(), list, this);
         recyclerView.setAdapter(adapter);
         pullLayout.addOnPullListener(new PullLayout.OnPullListener() {
             @Override
@@ -128,14 +128,14 @@ public class TakeOutDoingFragment extends BaseFragment implements BaseRecyclerVi
         public int onSuccess(TakeOutDoingFragment the, ApiClientRequest request, ApiClientResponse response, @Nullable PullLayout pullLayout) {
             if (request.isRoute(ROUTE.ORDER_LIST)) {
                 ListModel data = response.getData(ListModel.class);
+                if (the.page == 1) {
+                    the.list.clear();
+                }
                 if (data.getStatus() == OK) {
                     ArrayList<OrderDataModel> list = data.getData();
-                    if (the.page == 1) {
-                        the.list.clear();
-                    }
                     the.list.addAll(list);
                     the.adapter.notifyDataSetChanged();
-                    if (list.size() != 0) {
+                    if (the.list.size() != 0) {
                         the.pullLayout.setVisibility(View.VISIBLE);
                         the.nullData.setVisibility(View.GONE);
                     } else {
@@ -149,6 +149,15 @@ public class TakeOutDoingFragment extends BaseFragment implements BaseRecyclerVi
                         return SUCCEED;
                     }
                 } else {
+                    ToastUtil.showTextToast(the.getActivity(),data.getInfo());
+                    the.adapter.notifyDataSetChanged();
+                    if (the.list.size() != 0) {
+                        the.pullLayout.setVisibility(View.VISIBLE);
+                        the.nullData.setVisibility(View.GONE);
+                    } else {
+                        the.pullLayout.setVisibility(View.GONE);
+                        the.nullData.setVisibility(View.VISIBLE);
+                    }
                     return FAIL;
                 }
             } else if (request.isRoute(ROUTE.CHANGE_ORDER)) {

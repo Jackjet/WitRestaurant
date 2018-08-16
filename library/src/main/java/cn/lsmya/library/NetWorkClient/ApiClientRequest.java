@@ -58,7 +58,7 @@ public class ApiClientRequest implements Runnable {
     private boolean isStarted;
     protected boolean isError;
 
-    private boolean debug = false;
+    private boolean debug = true;
 
     // 是否为重复执行任务
     private boolean threadSubmitOnce;

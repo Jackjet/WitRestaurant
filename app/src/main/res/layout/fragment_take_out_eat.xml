@@ -11,7 +11,7 @@
             android:id="@+id/takeOutEatTitle"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_48"
-            android:background="@color/tabUnSelectColor"
+            android:background="@color/mainColor"
             android:text="外卖"
             android:gravity="center"
             android:textColor="@color/white"

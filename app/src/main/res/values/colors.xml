@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">@color/mainColor</color>
     <color name="colorAccent">@color/mainColor</color>
 
-    <color name="mainColor">#2670b1</color>
+    <color name="mainColor">#45b3ee</color>
     <color name="white">#FFFFFF</color>
     <color name="background">#F7F7F7</color>
     <color name="background2">#F2F2F2</color>
@@ -14,13 +14,15 @@
     <color name="black">#000000</color>
 
     <color name="red">#FF0000</color>
-    <color name="green">#5f9f53</color>
+    <color name="green">#5ac55e</color>
+
+
 
 
     <color name="orderTab">#a5a5a5</color>
     <color name="tabColor">#b4b1b1</color>
-    <color name="tabSelect">#dada10</color>
+    <color name="tabSelect">#e9d416</color>
     <color name="tabUnSelect">#000000</color>
     <color name="tabSelectColor">#999999</color>
-    <color name="tabUnSelectColor">#2670b1</color>
+    <color name="tabUnSelectColor">#45b3ee</color>
 </resources>

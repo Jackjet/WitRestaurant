@@ -3,11 +3,8 @@ package cn.lsmya.restaurant.eat;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-
-import com.alibaba.fastjson.JSON;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,12 +19,13 @@ import cn.lsmya.library.PullLayout.PullRecyclerView;
 import cn.lsmya.library.base.BaseFragment;
 import cn.lsmya.library.base.BaseRecyclerViewAdapter;
 import cn.lsmya.restaurant.R;
-import cn.lsmya.restaurant.adapter.EatListAdapter;
+import cn.lsmya.restaurant.adapter.EatListDoingAdapter;
 import cn.lsmya.restaurant.app.App;
 import cn.lsmya.restaurant.app.ROUTE;
 import cn.lsmya.restaurant.model.OrderDataModel;
 import cn.lsmya.restaurant.model.ListModel;
 import cn.lsmya.restaurant.orderData.EatActivity;
+import cn.lsmya.restaurant.util.ToastUtil;
 
 public class EatDoingFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnChildViewClickListener, ApiClientResponseWithPullHandler.GetPullLayout {
 
@@ -38,7 +36,7 @@ public class EatDoingFragment extends BaseFragment implements BaseRecyclerViewAd
     @BindView(R.id.fragmentList_null)
     ImageView nullData;
 
-    private EatListAdapter adapter;
+    private EatListDoingAdapter adapter;
     private List<OrderDataModel> list;
     private ApiHandler apiHandler = new ApiHandler(this);
     private ApiClientRequest apiClientRequest;
@@ -56,7 +54,7 @@ public class EatDoingFragment extends BaseFragment implements BaseRecyclerViewAd
         apiClientRequest = new ApiClientRequest(getActivity(), ROUTE.ORDER_LIST, apiHandler);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new EatListAdapter(getActivity(), list, this);
+        adapter = new EatListDoingAdapter(getActivity(), list, this);
         recyclerView.setAdapter(adapter);
         pullLayout.addOnPullListener(new PullLayout.OnPullListener() {
             @Override
@@ -91,8 +89,8 @@ public class EatDoingFragment extends BaseFragment implements BaseRecyclerViewAd
                 String storeId = model.getStore_id();
                 String orderNo = model.getOrder_no();
                 Intent intent = new Intent(getActivity(), EatActivity.class);
-                intent.putExtra("storeId",storeId);
-                intent.putExtra("orderNo",orderNo);
+                intent.putExtra("storeId", storeId);
+                intent.putExtra("orderNo", orderNo);
                 startActivity(intent);
                 break;
             case 1:
@@ -115,14 +113,14 @@ public class EatDoingFragment extends BaseFragment implements BaseRecyclerViewAd
         public int onSuccess(EatDoingFragment the, ApiClientRequest request, ApiClientResponse response, @Nullable PullLayout pullLayout) {
             if (request.isRoute(ROUTE.ORDER_LIST)) {
                 ListModel data = response.getData(ListModel.class);
+                if (the.page == 1) {
+                    the.list.clear();
+                }
                 if (data.getStatus() == OK) {
                     ArrayList<OrderDataModel> list = data.getData();
-                    if (the.page == 1) {
-                        the.list.clear();
-                    }
                     the.list.addAll(list);
                     the.adapter.notifyDataSetChanged();
-                    if (list.size() != 0) {
+                    if (the.list.size() != 0) {
                         the.pullLayout.setVisibility(View.VISIBLE);
                         the.nullData.setVisibility(View.GONE);
                     } else {
@@ -136,6 +134,15 @@ public class EatDoingFragment extends BaseFragment implements BaseRecyclerViewAd
                         return SUCCEED;
                     }
                 } else {
+                    ToastUtil.showTextToast(the.getActivity(),data.getInfo());
+                    the.adapter.notifyDataSetChanged();
+                    if (the.list.size() != 0) {
+                        the.pullLayout.setVisibility(View.VISIBLE);
+                        the.nullData.setVisibility(View.GONE);
+                    } else {
+                        the.pullLayout.setVisibility(View.GONE);
+                        the.nullData.setVisibility(View.VISIBLE);
+                    }
                     return FAIL;
                 }
             }

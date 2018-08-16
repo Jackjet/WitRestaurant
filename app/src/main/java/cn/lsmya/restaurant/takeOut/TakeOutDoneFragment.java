@@ -19,12 +19,13 @@ import cn.lsmya.library.PullLayout.PullRecyclerView;
 import cn.lsmya.library.base.BaseFragment;
 import cn.lsmya.library.base.BaseRecyclerViewAdapter;
 import cn.lsmya.restaurant.R;
-import cn.lsmya.restaurant.adapter.TakeOutListAdapter;
+import cn.lsmya.restaurant.adapter.TakeOutDoneAdapter;
 import cn.lsmya.restaurant.app.App;
 import cn.lsmya.restaurant.app.ROUTE;
 import cn.lsmya.restaurant.model.OrderDataModel;
 import cn.lsmya.restaurant.model.ListModel;
 import cn.lsmya.restaurant.orderData.TakeOutDataActivity;
+import cn.lsmya.restaurant.util.ToastUtil;
 
 public class TakeOutDoneFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnChildViewClickListener, ApiClientResponseWithPullHandler.GetPullLayout {
 
@@ -35,7 +36,7 @@ public class TakeOutDoneFragment extends BaseFragment implements BaseRecyclerVie
     @BindView(R.id.fragmentList_null)
     ImageView nullData;
 
-    private TakeOutListAdapter adapter;
+    private TakeOutDoneAdapter adapter;
     private List<OrderDataModel> list;
     private ApiHandler apiHandler = new ApiHandler(this);
     private ApiClientRequest apiClientRequest;
@@ -53,7 +54,7 @@ public class TakeOutDoneFragment extends BaseFragment implements BaseRecyclerVie
         apiClientRequest = new ApiClientRequest(getActivity(), ROUTE.ORDER_LIST, apiHandler);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new TakeOutListAdapter(getActivity(), list, this);
+        adapter = new TakeOutDoneAdapter(getActivity(), list, this);
         recyclerView.setAdapter(adapter);
         pullLayout.addOnPullListener(new PullLayout.OnPullListener() {
             @Override
@@ -112,14 +113,14 @@ public class TakeOutDoneFragment extends BaseFragment implements BaseRecyclerVie
         public int onSuccess(TakeOutDoneFragment the, ApiClientRequest request, ApiClientResponse response, @Nullable PullLayout pullLayout) {
             if (request.isRoute(ROUTE.ORDER_LIST)) {
                 ListModel data = response.getData(ListModel.class);
+                if (the.page == 1) {
+                    the.list.clear();
+                }
                 if (data.getStatus() == OK) {
                     ArrayList<OrderDataModel> list = data.getData();
-                    if (the.page == 1) {
-                        the.list.clear();
-                    }
                     the.list.addAll(list);
                     the.adapter.notifyDataSetChanged();
-                    if (list.size() != 0) {
+                    if (the.list.size() != 0) {
                         the.pullLayout.setVisibility(View.VISIBLE);
                         the.nullData.setVisibility(View.GONE);
                     } else {
@@ -133,6 +134,15 @@ public class TakeOutDoneFragment extends BaseFragment implements BaseRecyclerVie
                         return SUCCEED;
                     }
                 } else {
+                    ToastUtil.showTextToast(the.getActivity(),data.getInfo());
+                    the.adapter.notifyDataSetChanged();
+                    if (the.list.size() != 0) {
+                        the.pullLayout.setVisibility(View.VISIBLE);
+                        the.nullData.setVisibility(View.GONE);
+                    } else {
+                        the.pullLayout.setVisibility(View.GONE);
+                        the.nullData.setVisibility(View.VISIBLE);
+                    }
                     return FAIL;
                 }
             }

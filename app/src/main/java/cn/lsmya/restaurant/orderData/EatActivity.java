@@ -1,25 +1,41 @@
 package cn.lsmya.restaurant.orderData;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.PixelFormat;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,13 +48,21 @@ import cn.lsmya.library.base.BaseTitleActivity;
 import cn.lsmya.library.util.TimeUtils;
 import cn.lsmya.restaurant.R;
 import cn.lsmya.restaurant.adapter.FoodsAdapter;
+import cn.lsmya.restaurant.app.App;
 import cn.lsmya.restaurant.app.ROUTE;
 import cn.lsmya.restaurant.model.EatOrderModel;
 import cn.lsmya.restaurant.model.GoodsModel;
 import cn.lsmya.restaurant.model.OrderDataModel;
+import cn.lsmya.restaurant.util.FileUtils;
+import cn.lsmya.restaurant.util.Glide.GlideUtils;
 import cn.lsmya.restaurant.util.PrintQr;
 import cn.lsmya.restaurant.util.ToastUtil;
 import cn.lsmya.restaurant.view.ListViewNoSlide;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import woyou.aidlservice.jiuiv5.ICallback;
 import woyou.aidlservice.jiuiv5.IWoyouService;
 
@@ -124,7 +148,7 @@ public class EatActivity extends BaseTitleActivity implements ApiClientResponseW
         public boolean onSubmitBefore(EatActivity the, ApiClientRequest request) {
             if (request.isRoute(ROUTE.ORDER_DATA)) {
                 HashMap<String, Object> map = new HashMap<>();
-                map.put("store_id", the.storeId);
+                map.put("store_id", App.getStoreId());
                 map.put("order_no", the.orderNo);
                 request.setPost(map);
             }
@@ -147,6 +171,9 @@ public class EatActivity extends BaseTitleActivity implements ApiClientResponseW
                     the.list.clear();
                     the.list.addAll(order_goods_log);
                     the.adapter.notifyDataSetChanged();
+                    the.downTopLogo(the.model.getDianpulogo());
+                    the.downLogo(the.model.getLogo());
+                    the.downErWeiMa(the.model.getErweima());
                     return SUCCEED;
                 } else {
                     ToastUtil.showTextToast(the, "获取订单信息失败！");
@@ -161,7 +188,11 @@ public class EatActivity extends BaseTitleActivity implements ApiClientResponseW
     View.OnClickListener listener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            print(model);
+            if (topLogoBit != null && logoBit != null && erweimaBit != null) {
+                print(model);
+            }else {
+                ToastUtil.showTextToast(EatActivity.this,"店铺Logo或二维码加载失败，请重试！");
+            }
         }
     };
 
@@ -190,11 +221,12 @@ public class EatActivity extends BaseTitleActivity implements ApiClientResponseW
 
     public void print(OrderDataModel dataModel) {
         try {
-            woyouService.lineWrap(2, callback);//打印条头部
-            woyouService.lineWrap(2, callback);//打印条头部
+            woyouService.lineWrap(4, callback);//打印条头部
             woyouService.setAlignment(1, callback);//设置居中
+            woyouService.printBitmap(topLogoBit, callback);//顶部logo
+            woyouService.lineWrap(1, callback);
             woyouService.sendRAWData(boldOn(), callback); // 添加字体加粗指令
-            woyouService.printTextWithFont("堂吃订单\n", "gh", 35f, callback);
+            woyouService.printTextWithFont("\n堂吃订单\n", "gh", 35f, callback);
             woyouService.printerInit(callback);
             woyouService.setAlignment(1, callback);//设置居中
             woyouService.sendRAWData(boldOn(), callback); // 添加字体加粗指令
@@ -239,11 +271,9 @@ public class EatActivity extends BaseTitleActivity implements ApiClientResponseW
 
             woyouService.printerInit(callback);
             woyouService.setAlignment(1, callback);//设置居中
-            Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.text);
-            byte[] printQRCode = PrintQr.getPrintQRCode("www.baidu.com", 4, 2);
             woyouService.enterPrinterBuffer(true);
-            woyouService.printBitmap(bmp, callback);
-            woyouService.sendRAWData(printQRCode, callback);
+            woyouService.printBitmap(logoBit, callback);
+            woyouService.printBitmap(erweimaBit, callback);
             woyouService.commitPrinterBuffer();
             woyouService.exitPrinterBuffer(true);
             woyouService.lineWrap(5, callback);//打印条尾部
@@ -266,8 +296,14 @@ public class EatActivity extends BaseTitleActivity implements ApiClientResponseW
         @Override
         public void onRaiseException(int code, final String msg)
                 throws RemoteException {
+            Log.e("onRaiseException" + code, msg);
+
         }
     };
+
+    private Bitmap topLogoBit;
+    private Bitmap logoBit;
+    private Bitmap erweimaBit;
 
     /**
      * 字体加粗
@@ -279,4 +315,62 @@ public class EatActivity extends BaseTitleActivity implements ApiClientResponseW
         result[2] = 0xF;
         return result;
     }
+
+    public void downTopLogo(String url) {
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        OkHttpClient mOkHttpClient = new OkHttpClient();
+        Call call = mOkHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                InputStream inputStream = response.body().byteStream();
+                topLogoBit = BitmapFactory.decodeStream(inputStream);
+            }
+        });
+    }
+
+    public void downLogo(String url) {
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        OkHttpClient mOkHttpClient = new OkHttpClient();
+        Call call = mOkHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                InputStream inputStream = response.body().byteStream();
+                logoBit = BitmapFactory.decodeStream(inputStream);
+            }
+        });
+    }
+
+    public void downErWeiMa(String url) {
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        OkHttpClient mOkHttpClient = new OkHttpClient();
+        Call call = mOkHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                InputStream inputStream = response.body().byteStream();
+                erweimaBit = BitmapFactory.decodeStream(inputStream);
+            }
+        });
+    }
+
 }

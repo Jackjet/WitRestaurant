@@ -17,6 +17,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +34,7 @@ import cn.lsmya.library.base.BaseTitleActivity;
 import cn.lsmya.library.util.TimeUtils;
 import cn.lsmya.restaurant.R;
 import cn.lsmya.restaurant.adapter.FoodsAdapter;
+import cn.lsmya.restaurant.app.App;
 import cn.lsmya.restaurant.app.ROUTE;
 import cn.lsmya.restaurant.model.AddressModel;
 import cn.lsmya.restaurant.model.EatOrderModel;
@@ -40,6 +43,11 @@ import cn.lsmya.restaurant.model.OrderDataModel;
 import cn.lsmya.restaurant.util.PrintQr;
 import cn.lsmya.restaurant.util.ToastUtil;
 import cn.lsmya.restaurant.view.ListViewNoSlide;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import woyou.aidlservice.jiuiv5.ICallback;
 import woyou.aidlservice.jiuiv5.IWoyouService;
 
@@ -96,6 +104,7 @@ public class TakeOutDataActivity extends BaseTitleActivity implements ApiClientR
         tvRight.setOnClickListener(listener);
         pullLayout.setCanLoadMore(false);
         list = new ArrayList<>();
+        apiClientRequest.setDebug(true);
         pullLayout.addOnPullListener(new PullLayout.OnPullListener() {
             @Override
             public void onRefresh(PullLayout pullToRefreshLayout, boolean firstRefresh) {
@@ -135,7 +144,7 @@ public class TakeOutDataActivity extends BaseTitleActivity implements ApiClientR
         public boolean onSubmitBefore(TakeOutDataActivity the, ApiClientRequest request) {
             if (request.isRoute(ROUTE.ORDER_DATA)) {
                 HashMap<String, Object> map = new HashMap<>();
-                map.put("store_id", the.storeId);
+                map.put("store_id", App.getStoreId());
                 map.put("order_no", the.orderNo);
                 request.setPost(map);
             }
@@ -162,6 +171,10 @@ public class TakeOutDataActivity extends BaseTitleActivity implements ApiClientR
                         the.list.clear();
                         the.list.addAll(order_goods_log);
                         the.adapter.notifyDataSetChanged();
+
+                        the.downTopLogo(the.model.getDianpulogo());
+                        the.downLogo(the.model.getLogo());
+                        the.downErWeiMa(the.model.getErweima());
                     } catch (Exception e) {
                         Log.e("发生异常：：", e.getMessage());
                     }
@@ -177,7 +190,11 @@ public class TakeOutDataActivity extends BaseTitleActivity implements ApiClientR
     View.OnClickListener listener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            print(model);
+            if (topLogoBit != null && logoBit != null && erweimaBit != null) {
+                print(model);
+            }else {
+                ToastUtil.showTextToast(TakeOutDataActivity.this,"店铺Logo或二维码加载失败，请重试！");
+            }
         }
     };
 
@@ -234,9 +251,10 @@ public class TakeOutDataActivity extends BaseTitleActivity implements ApiClientR
 
     public void print(OrderDataModel dataModel) {
         try {
-            woyouService.lineWrap(2, callback);//打印条头部
-            woyouService.lineWrap(2, callback);//打印条头部
+            woyouService.lineWrap(4, callback);//打印条头部
             woyouService.setAlignment(1, callback);//设置居中
+            woyouService.printBitmap(topLogoBit, callback);//顶部logo
+            woyouService.lineWrap(1, callback);
             woyouService.sendRAWData(boldOn(), callback); // 添加字体加粗指令
             woyouService.printTextWithFont("外卖订单\n", "gh", 35f, callback);
             woyouService.printerInit(callback);
@@ -288,14 +306,13 @@ public class TakeOutDataActivity extends BaseTitleActivity implements ApiClientR
 
             woyouService.printerInit(callback);
             woyouService.setAlignment(1, callback);//设置居中
-            Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.text);
-            byte[] printQRCode = PrintQr.getPrintQRCode("www.baidu.com", 4, 2);
             woyouService.enterPrinterBuffer(true);
-            woyouService.printBitmap(bmp, callback);
-            woyouService.sendRAWData(printQRCode, callback);
+            woyouService.printBitmap(logoBit, callback);
+            woyouService.printBitmap(erweimaBit, callback);
             woyouService.commitPrinterBuffer();
             woyouService.exitPrinterBuffer(true);
             woyouService.lineWrap(5, callback);//打印条尾部
+
 
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -328,5 +345,67 @@ public class TakeOutDataActivity extends BaseTitleActivity implements ApiClientR
         result[2] = 0xF;
         return result;
     }
+
+    private Bitmap topLogoBit;
+    private Bitmap logoBit;
+    private Bitmap erweimaBit;
+
+    public void downTopLogo(String url) {
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        OkHttpClient mOkHttpClient = new OkHttpClient();
+        Call call = mOkHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                InputStream inputStream = response.body().byteStream();
+                topLogoBit = BitmapFactory.decodeStream(inputStream);
+            }
+        });
+    }
+
+    public void downLogo(String url) {
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        OkHttpClient mOkHttpClient = new OkHttpClient();
+        Call call = mOkHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                InputStream inputStream = response.body().byteStream();
+                logoBit = BitmapFactory.decodeStream(inputStream);
+            }
+        });
+    }
+
+    public void downErWeiMa(String url) {
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        OkHttpClient mOkHttpClient = new OkHttpClient();
+        Call call = mOkHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                InputStream inputStream = response.body().byteStream();
+                erweimaBit = BitmapFactory.decodeStream(inputStream);
+            }
+        });
+    }
+
 }
 

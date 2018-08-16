@@ -38,13 +38,16 @@ public class OrderDataModel {
     private String seat_number;
     private String seat_desk;
     private String eating_num;
+    private String erweima;
+    private String dianpulogo;
+    private String Logo;
     private CapitalpoolModel Capitalpool;
     private boolean OrderGoods;
 
     public OrderDataModel() {
     }
 
-    public OrderDataModel(String id, String store_id, String branch_id, String order_no, String uid, String nickname, String branch_name, String order_type, String order_buy_num, AddressModel order_address_log, SubsidyLogModel order_subsidy_log, String order_score_pay_log, ArrayList<GoodsModel> order_goods_log, String order_goods_total, String order_ship_price, String order_subsidy_total, String order_price, String order_total, String order_success_time, String order_close_info, String order_exhort, String order_ship_reply, String order_ship_time, String order_ship_waiter_log, String is_ping, String remark, String status, String create_time, String order_refund_status, String order_refund_way, String fail_info, String transaction_no, String seat_number, String seat_desk, String eating_num, CapitalpoolModel capitalpool, boolean orderGoods) {
+    public OrderDataModel(String id, String store_id, String branch_id, String order_no, String uid, String nickname, String branch_name, String order_type, String order_buy_num, AddressModel order_address_log, SubsidyLogModel order_subsidy_log, String order_score_pay_log, ArrayList<GoodsModel> order_goods_log, String order_goods_total, String order_ship_price, String order_subsidy_total, String order_price, String order_total, String order_success_time, String order_close_info, String order_exhort, String order_ship_reply, String order_ship_time, String order_ship_waiter_log, String is_ping, String remark, String status, String create_time, String order_refund_status, String order_refund_way, String fail_info, String transaction_no, String seat_number, String seat_desk, String eating_num, String erweima, String dianpulogo, String logo, CapitalpoolModel capitalpool, boolean orderGoods) {
         this.id = id;
         this.store_id = store_id;
         this.branch_id = branch_id;
@@ -80,8 +83,11 @@ public class OrderDataModel {
         this.seat_number = seat_number;
         this.seat_desk = seat_desk;
         this.eating_num = eating_num;
-        this.Capitalpool = capitalpool;
-        this.OrderGoods = orderGoods;
+        this.erweima = erweima;
+        this.dianpulogo = dianpulogo;
+        Logo = logo;
+        Capitalpool = capitalpool;
+        OrderGoods = orderGoods;
     }
 
     public String getId() {
@@ -364,6 +370,30 @@ public class OrderDataModel {
         this.eating_num = eating_num;
     }
 
+    public String getErweima() {
+        return erweima;
+    }
+
+    public void setErweima(String erweima) {
+        this.erweima = erweima;
+    }
+
+    public String getDianpulogo() {
+        return dianpulogo;
+    }
+
+    public void setDianpulogo(String dianpulogo) {
+        this.dianpulogo = dianpulogo;
+    }
+
+    public String getLogo() {
+        return Logo;
+    }
+
+    public void setLogo(String logo) {
+        Logo = logo;
+    }
+
     public CapitalpoolModel getCapitalpool() {
         return Capitalpool;
     }
@@ -393,7 +423,7 @@ public class OrderDataModel {
                 ", order_type='" + order_type + '\'' +
                 ", order_buy_num='" + order_buy_num + '\'' +
                 ", order_address_log=" + order_address_log +
-                ", order_subsidy_log='" + order_subsidy_log + '\'' +
+                ", order_subsidy_log=" + order_subsidy_log +
                 ", order_score_pay_log='" + order_score_pay_log + '\'' +
                 ", order_goods_log=" + order_goods_log +
                 ", order_goods_total='" + order_goods_total + '\'' +
@@ -418,6 +448,9 @@ public class OrderDataModel {
                 ", seat_number='" + seat_number + '\'' +
                 ", seat_desk='" + seat_desk + '\'' +
                 ", eating_num='" + eating_num + '\'' +
+                ", erweima='" + erweima + '\'' +
+                ", dianpulogo='" + dianpulogo + '\'' +
+                ", Logo='" + Logo + '\'' +
                 ", Capitalpool=" + Capitalpool +
                 ", OrderGoods=" + OrderGoods +
                 '}';

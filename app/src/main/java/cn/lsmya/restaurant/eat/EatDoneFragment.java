@@ -19,12 +19,13 @@ import cn.lsmya.library.PullLayout.PullRecyclerView;
 import cn.lsmya.library.base.BaseFragment;
 import cn.lsmya.library.base.BaseRecyclerViewAdapter;
 import cn.lsmya.restaurant.R;
-import cn.lsmya.restaurant.adapter.EatListAdapter;
+import cn.lsmya.restaurant.adapter.EatListDoneAdapter;
 import cn.lsmya.restaurant.app.App;
 import cn.lsmya.restaurant.app.ROUTE;
 import cn.lsmya.restaurant.model.OrderDataModel;
 import cn.lsmya.restaurant.model.ListModel;
 import cn.lsmya.restaurant.orderData.EatActivity;
+import cn.lsmya.restaurant.util.ToastUtil;
 
 public class EatDoneFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnChildViewClickListener, ApiClientResponseWithPullHandler.GetPullLayout {
 
@@ -35,7 +36,7 @@ public class EatDoneFragment extends BaseFragment implements BaseRecyclerViewAda
     @BindView(R.id.fragmentList_null)
     ImageView nullData;
 
-    private EatListAdapter adapter;
+    private EatListDoneAdapter adapter;
     private List<OrderDataModel> list;
     private ApiHandler apiHandler = new ApiHandler(this);
     private ApiClientRequest apiClientRequest;
@@ -53,7 +54,7 @@ public class EatDoneFragment extends BaseFragment implements BaseRecyclerViewAda
         apiClientRequest = new ApiClientRequest(getActivity(), ROUTE.ORDER_LIST, apiHandler);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new EatListAdapter(getActivity(), list, this);
+        adapter = new EatListDoneAdapter(getActivity(), list, this);
         recyclerView.setAdapter(adapter);
         pullLayout.addOnPullListener(new PullLayout.OnPullListener() {
             @Override
@@ -88,11 +89,9 @@ public class EatDoneFragment extends BaseFragment implements BaseRecyclerViewAda
                 String storeId = model.getStore_id();
                 String orderNo = model.getOrder_no();
                 Intent intent = new Intent(getActivity(), EatActivity.class);
-                intent.putExtra("storeId",storeId);
-                intent.putExtra("orderNo",orderNo);
+                intent.putExtra("storeId", storeId);
+                intent.putExtra("orderNo", orderNo);
                 startActivity(intent);
-                break;
-            case 1:
                 break;
         }
     }
@@ -112,14 +111,14 @@ public class EatDoneFragment extends BaseFragment implements BaseRecyclerViewAda
         public int onSuccess(EatDoneFragment the, ApiClientRequest request, ApiClientResponse response, @Nullable PullLayout pullLayout) {
             if (request.isRoute(ROUTE.ORDER_LIST)) {
                 ListModel data = response.getData(ListModel.class);
+                if (the.page == 1) {
+                    the.list.clear();
+                }
                 if (data.getStatus() == OK) {
                     ArrayList<OrderDataModel> list = data.getData();
-                    if (the.page == 1){
-                        the.list.clear();
-                    }
                     the.list.addAll(list);
                     the.adapter.notifyDataSetChanged();
-                    if (list.size() != 0) {
+                    if (the.list.size() != 0) {
                         the.pullLayout.setVisibility(View.VISIBLE);
                         the.nullData.setVisibility(View.GONE);
                     } else {
@@ -133,6 +132,15 @@ public class EatDoneFragment extends BaseFragment implements BaseRecyclerViewAda
                         return SUCCEED;
                     }
                 } else {
+                    ToastUtil.showTextToast(the.getActivity(),data.getInfo());
+                    the.adapter.notifyDataSetChanged();
+                    if (the.list.size() != 0) {
+                        the.pullLayout.setVisibility(View.VISIBLE);
+                        the.nullData.setVisibility(View.GONE);
+                    } else {
+                        the.pullLayout.setVisibility(View.GONE);
+                        the.nullData.setVisibility(View.VISIBLE);
+                    }
                     return FAIL;
                 }
             }

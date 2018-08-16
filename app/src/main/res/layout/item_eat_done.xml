@@ -70,7 +70,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/itemEatList_name"
+                    android:id="@+id/itemEatDone_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="middle"
@@ -81,7 +81,7 @@
                     android:textSize="@dimen/sp_16" />
 
                 <TextView
-                    android:id="@+id/itemEatList_address"
+                    android:id="@+id/itemEatDone_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="middle"
@@ -92,7 +92,7 @@
                     android:textSize="@dimen/sp_16" />
 
                 <TextView
-                    android:id="@+id/itemEatList_money"
+                    android:id="@+id/itemEatDone_money"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="middle"
@@ -103,7 +103,7 @@
                     android:textSize="@dimen/sp_16" />
 
                 <TextView
-                    android:id="@+id/itemEatList_time"
+                    android:id="@+id/itemEatDone_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="middle"
@@ -114,7 +114,7 @@
                     android:textSize="@dimen/sp_16" />
 
                 <TextView
-                    android:id="@+id/itemEatList_data"
+                    android:id="@+id/itemEatDone_data"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/dp_8"
@@ -123,25 +123,12 @@
                     android:textSize="@dimen/sp_16" />
             </LinearLayout>
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_1"
-            android:layout_marginBottom="@dimen/dp_10"
-            android:background="@color/background2" />
-
-        <Button
-            android:id="@+id/itemEatList_todoClick"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_35"
-            android:layout_marginBottom="@dimen/dp_10"
-            android:layout_marginLeft="@dimen/dp_35"
-            android:layout_marginRight="@dimen/dp_35"
-            android:background="@drawable/shape_green_8"
-            android:text="确认上菜"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sp_15"
-            android:visibility="gone" />
-
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="@dimen/dp_60"
+        android:layout_height="@dimen/dp_60"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/takeout_done" />
 </RelativeLayout>

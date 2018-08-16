@@ -19,8 +19,8 @@ import cn.lsmya.library.util.TimeUtils;
 import cn.lsmya.restaurant.R;
 import cn.lsmya.restaurant.model.OrderDataModel;
 
-public class TakeOutListAdapter extends BaseRecyclerViewAdapter<TakeOutListAdapter.ViewHolder> {
-    public TakeOutListAdapter(Context context, List list, OnChildViewClickListener onChildViewClickListener) {
+public class TakeOutToDoAdapter extends BaseRecyclerViewAdapter<TakeOutToDoAdapter.ViewHolder> {
+    public TakeOutToDoAdapter(Context context, List list, OnChildViewClickListener onChildViewClickListener) {
         super(context, list, onChildViewClickListener);
     }
 
@@ -32,41 +32,28 @@ public class TakeOutListAdapter extends BaseRecyclerViewAdapter<TakeOutListAdapt
         holder.address.setText(model.getOrder_address_log().getAddress());
         holder.money.setText("¥" + model.getOrder_total());
         holder.time.setText(TimeUtils.todayYyyyMmDdHhMmSs(new Date(Long.parseLong(model.getCreate_time()) * 1000)));
-        switch (model.getStatus()) {
-            case "pay":
-                holder.todoClick.setVisibility(View.VISIBLE);
-                holder.todoClick.setOnClickListener(new OnViewClickListener(onChildViewClickListener, position, 1));
-                break;
-            case "ship":
-                holder.doingClick.setVisibility(View.VISIBLE);
-                holder.doingClick.setOnClickListener(new OnViewClickListener(onChildViewClickListener, position, 2));
-                break;
-            case "success":
-                break;
-        }
+        holder.todoClick.setOnClickListener(new OnViewClickListener(onChildViewClickListener, position, 1));
         holder.data.setText(model.getOrder_exhort());
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_takeout_list, parent, false));
+        return new ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_takeout_todo, parent, false));
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.itemTakeOutList_name)
+        @BindView(R.id.itemTakeOutToDo_name)
         TextView name;
-        @BindView(R.id.itemTakeOutList_address)
+        @BindView(R.id.itemTakeOutToDo_address)
         TextView address;
-        @BindView(R.id.itemTakeOutList_money)
+        @BindView(R.id.itemTakeOutToDo_money)
         TextView money;
-        @BindView(R.id.itemTakeOutList_time)
+        @BindView(R.id.itemTakeOutToDo_time)
         TextView time;
-        @BindView(R.id.itemTakeOutList_data)
+        @BindView(R.id.itemTakeOutToDo_data)
         TextView data;
-        @BindView(R.id.itemTakeOutList_todoClick)
+        @BindView(R.id.itemTakeOutToDo_todoClick)
         Button todoClick;
-        @BindView(R.id.itemTakeOutList_doingClick)
-        Button doingClick;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

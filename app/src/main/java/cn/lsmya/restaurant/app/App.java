@@ -27,8 +27,24 @@ public class App extends Application {
         sp.edit().putString("store_id", id).apply();
     }
 
-    public static String getStoreId(){
-        return sp.getString("store_id","");
+    public static String getStoreId() {
+        return sp.getString("store_id", "");
+    }
+
+    public static void setLogo(String path) {
+        sp.edit().putString("logo", path).apply();
+    }
+
+    public static String getLogo() {
+        return sp.getString("logo", "");
+    }
+
+    public static void setName(String path) {
+        sp.edit().putString("name", path).apply();
+    }
+
+    public static String getName() {
+        return sp.getString("name", "");
     }
 
     public static Context getContext() {
