@@ -9,7 +9,7 @@
         android:id="@+id/base_TitleBar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_50"
-        android:background="#2670b1">
+        android:background="#45b3ee">
 
         <ImageView
             android:id="@+id/base_back"
