@@ -101,7 +101,7 @@ public class SubsidyLogModel {
     }
 
     public class SubsidyListModel {
-        private int price;
+        private String price;
         private String consume;
         private String title;
         private String type;
@@ -109,18 +109,18 @@ public class SubsidyLogModel {
         public SubsidyListModel() {
         }
 
-        public SubsidyListModel(int price, String consume, String title, String type) {
+        public SubsidyListModel(String price, String consume, String title, String type) {
             this.price = price;
             this.consume = consume;
             this.title = title;
             this.type = type;
         }
 
-        public int getPrice() {
+        public String getPrice() {
             return price;
         }
 
-        public void setPrice(int price) {
+        public void setPrice(String price) {
             this.price = price;
         }
 
